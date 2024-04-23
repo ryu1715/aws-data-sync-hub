@@ -55,9 +55,42 @@ resource "aws_s3_bucket" "aws_data_sync_hub" {
 }
 
 # Amazon Kendraインデックスの定義
-resource "aws_kendra_index" "aws-data-sync_hub_index" {
+resource "aws_kendra_index" "aws_data_sync_hub_index" {
   name     = "aws-data-sync-kendra-index"
   role_arn = "arn:aws:iam::123456789012:role/kendra-index-role"
 
+  description = "Example Kendra Index for document searching"
+  edition     = "DEVELOPER_EDITION" # またはENTERPRISE_EDITIONを使用
+
+  document_metadata_configuration {
+    name = "FileType"
+    type = "STRING_VALUE"
+
+    search {
+      displayable = true
+      searchable  = true
+      sortable    = true
+    }
+  }
+
+  server_side_encryption_configuration {
+    kms_key_id = aws_kms_key.example_kms_key.arn
+  }
+
+  # 設定するタグを追加
+  tags = {
+    Environment = "development"
+  }
+
+  capacity_units {
+    query_capacity_units   = 1
+    storage_capacity_units = 1
+  }
+
   # Kendraのインデックスの他の設定をここに追加
+}
+
+resource "aws_kms_key" "aws_data_sync_hub_key" {
+  description         = "KMS key for encrypting Kendra indexes"
+  enable_key_rotation = true
 }
