@@ -34,7 +34,7 @@ def process_message():
         ]
     )
 
-    # ここでNotionに対する更新処理を実装する
+    # TODO: ここでNotionに対する更新処理を実装する
     # Notion APIへのリクエストなど
 
     return jsonify({"message": "Message processed successfully"}), 200
